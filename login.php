@@ -50,6 +50,19 @@ if ( isset($_SESSION['error']) ) {
 <head>
 <title>Ingreso al sistema</title>
 </head><body>
+<?php    
+echo "<center>";
+echo "<h1>José Mauricio López García, Carnet: 5190-21-352</h1>";  
+echo "<h1>Emerson Sebastian Hernandez Rojas, Carnet: XXXXXX</h1>";  
+echo "</center>";
+echo "<p>";
+echo "<strong>Archivo:</strong>" . $_SERVER['PHP_SELF'] . "<br>";
+echo "<strong>Servidor:</strong>" . $_SERVER['SERVER_NAME'] . "<br>";
+echo "<strong>Cliente IP:</strong>" . $_SERVER['REMOTE_ADDR'] . "<br>";
+echo "<strong>Cliente Nombre:</strong>" . (isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : 'No disponible') . "<br>";
+echo "<strong>User Agent:</strong>". $_SERVER['HTTP_USER_AGENT'] . "<br>";
+echo "</p>";
+?>
 <h1>Ingrese sus credenciales</h1>
 <div class="container">
 <form method="post">
