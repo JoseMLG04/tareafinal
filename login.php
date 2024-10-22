@@ -4,7 +4,7 @@ session_start();
 
 if (isset($_POST['correo']) && isset($_POST['pass'])) {
     if (strlen($_POST['correo']) < 1 || strlen($_POST['pass']) < 1) {
-        $_SESSION['error'] = 'datos incompletos';
+        $_SESSION['error'] = 'Datos incompletos';
         header("Location: login.php");
         return;
     }
@@ -26,12 +26,12 @@ if (isset($_POST['correo']) && isset($_POST['pass'])) {
         header("Location: index.php");
         return;
     } else {
-        $_SESSION['error'] = 'usuario no encontrado, revisar usuario y/o contraseña';
+        $_SESSION['error'] = 'Usuario no encontrado, revisar usuario y/o contraseña';
     }
 }
 
 if (isset($_SESSION['error'])) {
-    echo '<p style="color:red">' . $_SESSION['error'] . "</p>\n";
+    echo '<div class="alert alert-danger text-center" role="alert" style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 80%;">' . $_SESSION['error'] . '</div>';
     unset($_SESSION['error']);
 }
 ?>
@@ -57,6 +57,7 @@ if (isset($_SESSION['error'])) {
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
     </style>
 </head>
@@ -72,7 +73,7 @@ if (isset($_SESSION['error'])) {
             <label for="f_pass" class="form-label">Password:</label>
             <input type="password" name="pass" id="f_pass" class="form-control">
         </div>
-        <button type="submit" onclick="return doValidate();" class="btn btn-primary">Log In</button>
+        <button type="submit" class="btn btn-primary">Log In</button>
         <a href="login.php" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
