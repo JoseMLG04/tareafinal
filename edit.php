@@ -101,50 +101,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <head>
-    <?php require_once('head.php'); ?>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar estudiante</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<h1>Editando Estudiante</h1>
-<form method="post">
-<p>Nombres:
-<input type="text" name="nombres" id="fn" value="<?= $nombres ?>"></p>
-<p>Apellidos:
-<input type="text" name="apellidos" id="ln" value="<?= $apellidos ?>"></p>
-<p>Correo:
-<input type="text" name="correo" id="em" value="<?= $correo ?>"></p>
-<p>Aficiones:
-<br>
-<textarea name="aficiones" rows="8" cols="80" id="afi"><?= $aficiones ?></textarea>
-</p>
+<div class="container mt-5">
+    <h1 class="mb-4">Editando Estudiante</h1>
+    <form method="post">
+        <div class="mb-3">
+            <label for="fn" class="form-label">Nombres:</label>
+            <input type="text" class="form-control" name="nombres" id="fn" value="<?= $nombres ?>">
+        </div>
+        <div class="mb-3">
+            <label for="ln" class="form-label">Apellidos:</label>
+            <input type="text" class="form-control" name="apellidos" id="ln" value="<?= $apellidos ?>">
+        </div>
+        <div class="mb-3">
+            <label for="em" class="form-label">Correo:</label>
+            <input type="email" class="form-control" name="correo" id="em" value="<?= $correo ?>">
+        </div>
+        <div class="mb-3">
+            <label for="afi" class="form-label">Aficiones:</label>
+            <textarea name="aficiones" class="form-control" rows="8" id="afi"><?= $aficiones ?></textarea>
+        </div>
+        <div class="mb-3">
+            <label>Cursos y/o certificaciones:</label>
+            <input type="button" id="addCurso" class="btn btn-primary mb-3" value="+">
+        </div>
+        <div id="curso_fields">
+            <?php
+            $cuentaCur = 0;
+            foreach ($cursos as $curso) {
+                $cuentaCur++;
+                
+                $anio = isset($curso['anio']) ? htmlentities($curso['anio']) : '';
+                $nombre = isset($curso['nombre']) ? htmlentities($curso['nombre']) : '';
 
-<p>
-Cursos y/o certificaciones:
-<input type="button" id="addCurso" value="+">
-</p>
-<div id="curso_fields">
-<?php
-$cuentaCur = 0;
-foreach ($cursos as $curso) {
-    $cuentaCur++;
-    
-    $anio = isset($curso['anio']) ? htmlentities($curso['anio']) : '';
-    $nombre = isset($curso['nombre']) ? htmlentities($curso['nombre']) : '';
-
-    echo('<div id="curso' . $cuentaCur . '">');
-    echo('<p>Año: <input type="text" name="cur_anio' . $cuentaCur . '" value="' . $anio . '" />');
-    echo('<input type="button" value="-" onclick="$(\'#curso' . $cuentaCur . '\').remove();return false;"></p>');
-    echo('<p>Curso: <input type="text" name="cur_nombre' . $cuentaCur . '" class="cursos" value="' . $nombre . '" /></div>');
-}
-?>
+                echo('<div id="curso' . $cuentaCur . '" class="mb-3">');
+                echo('<div class="row mb-2"><div class="col"><label>Año:</label><input type="text" class="form-control" name="cur_anio' . $cuentaCur . '" value="' . $anio . '" /></div>');
+                echo('<div class="col"><input type="button" class="btn btn-danger" value="-" onclick="$(\'#curso' . $cuentaCur . '\').remove();return false;"></div></div>');
+                echo('<label>Curso:</label><input type="text" class="form-control cursos" name="cur_nombre' . $cuentaCur . '" value="' . $nombre . '" /></div>');
+            }
+            ?>
+        </div>
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <a href="index.php" class="btn btn-secondary">Cancelar</a>
+    </form>
 </div>
 
-<p><input type="submit" value="Guardar" onclick="return doValidate();"/>
-<a href="index.php">Cancelar</a></p>
-</form>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     let cuentaCur = <?= $cuentaCur ?>;
     $(document).ready( function() {
@@ -156,10 +166,11 @@ foreach ($cursos as $curso) {
             }
             cuentaCur++;
             $('#curso_fields').append(
-                '<div id="curso' + cuentaCur + '"> \
-                <p>Año: <input type="text" name="cur_anio' + cuentaCur + '" value="" /> \
-                <input type="button" value="-" onclick="$(\'#curso' + cuentaCur + '\').remove();return false;"></p> \
-                <p>Curso: <input type="text" name="cur_nombre' + cuentaCur + '" class="cursos" value="" /></div>'
+                '<div id="curso' + cuentaCur + '" class="mb-3"> \
+                <div class="row mb-2"><div class="col"><label>Año:</label> \
+                <input type="text" class="form-control" name="cur_anio' + cuentaCur + '" value="" /></div> \
+                <div class="col"><input type="button" class="btn btn-danger" value="-" onclick="$(\'#curso' + cuentaCur + '\').remove();return false;"></div></div> \
+                <label>Curso:</label><input type="text" class="form-control cursos" name="cur_nombre' + cuentaCur + '" value="" /></div>'
             );
             $('.cursos').autocomplete({
                 source: "cursos.php"

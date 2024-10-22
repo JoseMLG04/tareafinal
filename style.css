@@ -1,0 +1,89 @@
+/* styles.css */
+:root {
+    --teal-200: #64ffda; /* Define el color teal-200 */
+}
+
+
+title{
+    font-family: Arial, sans-serif;
+    color: #145a7b;
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ff0000;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.bg-teal-200 {
+    background-color: var(--teal-200);
+}
+
+h2 {
+    color: #444;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table,
+th,
+td {
+    border: 1px solid #ddd;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+form {
+    margin: 20px 0;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.actions form {
+    display: inline;
+}
+
+.alert {
+    padding: 15px;
+    background-color: #f44336;
+    color: white;
+    margin-bottom: 20px;
+}
