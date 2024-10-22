@@ -38,43 +38,53 @@ if (isset($_SESSION['error'])) {
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingreso al sistema</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: gray;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .login-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-    </style>
-</head>
-<body>
-<div class="login-container">
-    <h1 class="mb-4">Ingrese sus credenciales</h1>
-    <form method="post">
-        <div class="mb-3">
-            <label for="f_correo" class="form-label">Correo:</label>
-            <input type="text" name="correo" id="f_correo" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="f_pass" class="form-label">Password:</label>
-            <input type="password" name="pass" id="f_pass" class="form-control">
-        </div>
-        <button type="submit" onclick="return doValidate();" class="btn btn-primary">Log In</button>
-        <a href="login.php" class="btn btn-secondary">Cancel</a>
-    </form>
+<title>Ingreso al sistema</title>
+</head><body>
+<?php    
+echo "<center>";
+echo "<h1>José Mauricio López García, Carnet: 5190-21-352</h1>";  
+echo "<h1>Emerson Sebastian Hernandez Rojas, Carnet: XXXXXX</h1>";  
+echo "</center>";
+echo "<p>";
+echo "<strong>Archivo:</strong>" . $_SERVER['PHP_SELF'] . "<br>";
+echo "<strong>Servidor:</strong>" . $_SERVER['SERVER_NAME'] . "<br>";
+echo "<strong>Cliente IP:</strong>" . $_SERVER['REMOTE_ADDR'] . "<br>";
+echo "<strong>Cliente Nombre:</strong>" . (isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : 'No disponible') . "<br>";
+echo "<strong>User Agent:</strong>". $_SERVER['HTTP_USER_AGENT'] . "<br>";
+echo "</p>";
+?>
+<h1>Ingrese sus credenciales</h1>
+<div class="container">
+<form method="post">
+<p>correo:
+<input type="text" name="correo" id="f_correo"></p>
+
+<p>Password:
+<input type="password" name="pass" id="f_pass"></p>
+
+<p><input type="submit" onclick="return doValidate();" value="Log In"/>
+<a href="login.php">Cancel</a></p>
+</form>
+
+<script>
+function doValidate() {
+         console.log('Validating...');
+         try {
+             pw = document.getElementById('f_pass').value;
+			 em = document.getElementById('f_correo').value;
+             console.log("Validating pw="+pw);
+			 console.log("Validating em="+em);
+             if (pw == null || pw == "") {
+                 alert("Debe especificar ambos campos");
+                 return false;
+             }
+             return true;
+         } catch(e) {
+             return false;
+         }
+         return false;
+     }
+</script>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
