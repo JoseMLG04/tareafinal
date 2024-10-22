@@ -2,27 +2,22 @@
 require_once "db.php";
 session_start();
 
-// Verificar si el usuario está logueado
 if (!isset($_SESSION['id_usuario'])) {
     die("Ingresar al sistema");
 }
 
-// Verificar si se pasa el ID del alumno
 if (isset($_GET['id_alumno'])) {
     $id_alumno = $_GET['id_alumno'];
-    // Obtener los datos del alumno
     $stmt = $pdo->prepare('SELECT * FROM alumno WHERE id_alumno = :id');
     $stmt->execute(array(':id' => $id_alumno));
     $alumno = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Si el alumno no existe, redirigir con mensaje de error
     if ($alumno === false) {
         $_SESSION['error'] = 'Estudiante no encontrado';
         header("Location: index.php");
         return;
     }
     
-    // Obtener los cursos del alumno
     $stmt = $pdo->prepare('SELECT * FROM alumno_curso ac JOIN curso c ON ac.id_curso = c.id_curso WHERE ac.id_alumno = :id');
     $stmt->execute(array(':id' => $id_alumno));
     $cursos = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -16,6 +16,7 @@ if (isset($_POST['delete']) && isset($_POST['id_alumno'])) {
     header('Location: index.php');
     return;
 }
+}
 
 // Verificar si se pasa el ID del alumno en la URL
 if (!isset($_GET['id_alumno'])) {
@@ -32,6 +33,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 // Si el alumno no existe, redirigir con mensaje de error
 if ($row === false) {
     $_SESSION['error'] = 'Alumno no encontrado';
+    header('Location: index.php');
     header('Location: index.php');
     return;
 }
