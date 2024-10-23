@@ -1,7 +1,7 @@
 <?php
 require_once "db.php";
 session_start();
-// verificar que se envió parametro
+
 if ( ! isset($_GET['id_alumno']) ) {
   $_SESSION['error'] = "Alumno no especificado";
   header('Location: index.php');
@@ -15,13 +15,12 @@ if ( $row === false ) {
     header( 'Location: index.php' ) ;
     return;
 }
-// Flash pattern
+
 if ( isset($_SESSION['error']) ) {
     echo '<div class="alert alert-danger" role="alert">'.$_SESSION['error']."</div>\n";
     unset($_SESSION['error']);
 }
 
-// Verificar si las claves existen y no son null antes de usar htmlentities
 $fn = isset($row['NOMBRES']) ? htmlentities($row['NOMBRES']) : '';
 $ln = isset($row['APELLIDOS']) ? htmlentities($row['APELLIDOS']) : '';
 $em = isset($row['CORREO']) ? htmlentities($row['CORREO']) : '';
@@ -35,9 +34,7 @@ $id = $row['ID_ALUMNO'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consulta de Alumno</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
     <style>
         body {
             background-color: #f8f9fa;
@@ -74,7 +71,7 @@ $id = $row['ID_ALUMNO'];
             <label class="form-label">Cursos y certificaciones:</label>
             <ul class="list-group">
                 <?php
-                // Corregir nombres de tablas y columnas en la consulta SQL
+
                 $stmt = $pdo->prepare("SELECT ac.anio, c.nombre FROM alumno_curso ac 
                                         INNER JOIN curso c 
                                         ON c.id_curso = ac.id_curso
@@ -91,7 +88,7 @@ $id = $row['ID_ALUMNO'];
         <a href="index.php" class="btn btn-secondary">Regresar</a>
     </form>
 </div>
-<!-- Bootstrap JS -->
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0-alpha3/js/bootstrap.min.js"></script>

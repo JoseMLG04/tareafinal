@@ -1,29 +1,23 @@
 <?php 
 require_once "db.php";
 session_start();
-
-// Verificar si el usuario está logueado
 if (!isset($_SESSION['id_usuario'])) {
     die("Ingresar al sistema");
 }
 
-// Procesar formulario al enviar
 if (isset($_POST['nombres']) && isset($_POST['apellidos']) && isset($_POST['correo']) && isset($_POST['aficiones'])) {
-    // Validación de campos requeridos
     if (strlen($_POST['nombres']) < 1 || strlen($_POST['apellidos']) < 1) {
         $_SESSION['error'] = 'Datos incompletos';
         header("Location: nuevo.php");
         return;
     }
 
-    // Validación de correo
     if (strpos($_POST['correo'], '@') === false) {
         $_SESSION['error'] = 'Correo electrónico no válido';
         header("Location: nuevo.php");
         return;
     }
 
-    // Validación de los cursos
     for ($i = 1; $i <= 9; $i++) {
         if (!isset($_POST['anio' . $i]) || !isset($_POST['curso' . $i])) continue;
         $anio = htmlentities($_POST['anio' . $i]);
@@ -42,7 +36,6 @@ if (isset($_POST['nombres']) && isset($_POST['apellidos']) && isset($_POST['corr
         }
     }
 
-    // Insertar nuevo alumno
     $stmt = $pdo->prepare('INSERT INTO alumno(id_usuario, nombres, apellidos, correo, aficiones)
                            VALUES (:ide, :nom, :ape, :cor, :afi)');
     $stmt->execute(array(
@@ -55,7 +48,6 @@ if (isset($_POST['nombres']) && isset($_POST['apellidos']) && isset($_POST['corr
 
     $id_alumno = $pdo->lastInsertId();
 
-    // Insertar los cursos del alumno
     for ($i = 1; $i <= 9; $i++) {
         if (!isset($_POST['cur_anio' . $i]) || !isset($_POST['cur_nombre' . $i])) continue;
         $anio = $_POST['cur_anio' . $i];
@@ -86,7 +78,6 @@ if (isset($_POST['nombres']) && isset($_POST['apellidos']) && isset($_POST['corr
     return;
 }
 
-// Mostrar mensajes de error si los hay
 if (isset($_SESSION['error'])) {
     echo '<div class="alert alert-danger">' . $_SESSION['error'] . "</div>\n";
     unset($_SESSION['error']);
@@ -97,10 +88,8 @@ if (isset($_SESSION['error'])) {
 <head>
     <?php require_once('head.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- jQuery UI CSS for Autocomplete -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <title>Ingreso de nuevo estudiante</title>
 </head>
@@ -134,10 +123,8 @@ if (isset($_SESSION['error'])) {
         <a href="index.php" class="btn btn-secondary">Cancelar</a>
     </form>
 
-<!-- jQuery JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- jQuery UI JS for Autocomplete -->
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     
     <script>
@@ -158,7 +145,6 @@ if (isset($_SESSION['error'])) {
                     </div>`
                 );
 
-                // Añadir autocomplete en los campos de curso
                 $('.cursos').autocomplete({ source: "cursos.php" });
             });
         });

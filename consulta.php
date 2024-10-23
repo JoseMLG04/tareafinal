@@ -2,7 +2,6 @@
 require_once "db.php";
 session_start();
 
-// verificar que se envió parametro
 if ( ! isset($_GET['id_alumno']) ) {
   $_SESSION['error'] = "Alumno no especificado";
   header('Location: index.php');
@@ -18,7 +17,6 @@ if ( $row === false ) {
     return;
 }
 
-// Flash pattern
 if ( isset($_SESSION['error']) ) {
     echo '<p style="color:red">'.$_SESSION['error']."</p>\n";
     unset($_SESSION['error']);

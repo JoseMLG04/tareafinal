@@ -23,13 +23,11 @@ if (isset($_GET['id_alumno'])) {
     $cursos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Setear valores por defecto si no existen campos
 $nombres = isset($alumno['nombres']) ? htmlentities($alumno['nombres']) : '';
 $apellidos = isset($alumno['apellidos']) ? htmlentities($alumno['apellidos']) : '';
 $correo = isset($alumno['correo']) ? htmlentities($alumno['correo']) : '';
 $aficiones = isset($alumno['aficiones']) ? htmlentities($alumno['aficiones']) : '';
 
-// Si se envía el formulario, procesar la actualización
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (strlen($_POST['nombres']) < 1 || strlen($_POST['apellidos']) < 1) {
         $_SESSION['error'] = 'Datos incompletos';
@@ -42,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         return;
     }
 
-    // Actualizar los datos del alumno
     $stmt = $pdo->prepare('UPDATE alumno SET nombres = :nom, apellidos = :ape, correo = :cor, aficiones = :afi WHERE id_alumno = :id');
     $stmt->execute(array(
         ':nom' => htmlentities($_POST['nombres']),
@@ -52,11 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ':id' => $id_alumno
     ));
 
-    // Actualizar los cursos del alumno
     $stmt = $pdo->prepare('DELETE FROM alumno_curso WHERE id_alumno = :id');
     $stmt->execute(array(':id' => $id_alumno));
 
-    // Insertar los cursos editados
     for ($i = 1; $i <= 9; $i++) {
         if (!isset($_POST['cur_anio' . $i]) || !isset($_POST['cur_nombre' . $i])) continue;
         $anio = $_POST['cur_anio' . $i];
@@ -96,11 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar estudiante</title>
-
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- jQuery UI CSS for Autocomplete -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 </head>
 <body>
@@ -150,11 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <a href="index.php" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
-
-<!-- jQuery JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- jQuery UI JS for Autocomplete -->
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
 <script>
@@ -178,8 +165,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 source: "cursos.php"
             });
         });
-        
-        // Initialize autocomplete for existing course fields
         $('.cursos').autocomplete({
             source: "cursos.php"
         });

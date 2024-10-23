@@ -2,19 +2,15 @@
 require_once "db.php";
 session_start();
 
-// Verificar si el usuario está logueado
 if (!isset($_SESSION['id_usuario'])) {
     die("No has iniciado sesión");
 }
 
-// Verificar si se envía el formulario de eliminación
 if (isset($_POST['delete']) && isset($_POST['id_alumno'])) {
-    // Primero eliminamos los cursos asociados
     $sql = "DELETE FROM alumno_curso WHERE id_alumno = :id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(array(':id' => $_POST['id_alumno']));
 
-    // Luego eliminamos al alumno
     $sql = "DELETE FROM alumno WHERE id_alumno = :id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(array(':id' => $_POST['id_alumno']));
@@ -24,26 +20,22 @@ if (isset($_POST['delete']) && isset($_POST['id_alumno'])) {
     return;
 }
 
-// Verificar si se pasa el ID del alumno en la URL
 if (!isset($_GET['id_alumno'])) {
     $_SESSION['error'] = "No se especificó ningún alumno para eliminar";
     header('Location: index.php');
     return;
 }
 
-// Obtener los datos del alumno
 $stmt = $pdo->prepare("SELECT id_alumno, nombres, apellidos, correo FROM alumno WHERE id_alumno = :id");
 $stmt->execute(array(":id" => $_GET['id_alumno']));
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Si el alumno no existe, redirigir con mensaje de error
 if ($row === false) {
     $_SESSION['error'] = 'Alumno no encontrado';
     header('Location: index.php');
     return;
 }
 
-// Definir variables
 $nombre_completo = $row['nombres'] . " " . $row['apellidos'];
 $correo = $row['correo'];
 ?>
