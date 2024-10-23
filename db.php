@@ -2,7 +2,7 @@
 $host = 'mysql_containert';
 $db   = 'db';
 $user = 'root'; 
-$pass = 'Doom0509'; 
+$pass = 'mysql'; 
 $charset = 'utf8mb4';
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [

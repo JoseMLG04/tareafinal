@@ -9,13 +9,19 @@ if (!isset($_SESSION['id_usuario'])) {
 
 // Verificar si se envía el formulario de eliminación
 if (isset($_POST['delete']) && isset($_POST['id_alumno'])) {
+    // Primero eliminamos los cursos asociados
+    $sql = "DELETE FROM alumno_curso WHERE id_alumno = :id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(array(':id' => $_POST['id_alumno']));
+
+    // Luego eliminamos al alumno
     $sql = "DELETE FROM alumno WHERE id_alumno = :id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(array(':id' => $_POST['id_alumno']));
+
     $_SESSION['success'] = 'Registro eliminado correctamente';
     header('Location: index.php');
     return;
-}
 }
 
 // Verificar si se pasa el ID del alumno en la URL
@@ -33,7 +39,6 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 // Si el alumno no existe, redirigir con mensaje de error
 if ($row === false) {
     $_SESSION['error'] = 'Alumno no encontrado';
-    header('Location: index.php');
     header('Location: index.php');
     return;
 }

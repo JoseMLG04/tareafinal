@@ -8,7 +8,7 @@ if (!isset($_SESSION['id_usuario'])) {
 
 if (isset($_GET['id_alumno'])) {
     $id_alumno = $_GET['id_alumno'];
-    $stmt = $pdo->prepare('SELECT * FROM alumno WHERE id_alumno = :id');
+    $stmt = $pdo->prepare('SELECT a.nombres, a.apellidos, a.correo, a.aficiones FROM alumno a WHERE id_alumno = :id');
     $stmt->execute(array(':id' => $id_alumno));
     $alumno = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -18,7 +18,7 @@ if (isset($_GET['id_alumno'])) {
         return;
     }
     
-    $stmt = $pdo->prepare('SELECT * FROM alumno_curso ac JOIN curso c ON ac.id_curso = c.id_curso WHERE ac.id_alumno = :id');
+    $stmt = $pdo->prepare('SELECT ac.anio, c.nombre FROM alumno_curso ac JOIN curso c ON ac.id_curso = c.id_curso WHERE ac.id_alumno = :id');
     $stmt->execute(array(':id' => $id_alumno));
     $cursos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -31,7 +31,6 @@ $aficiones = isset($alumno['aficiones']) ? htmlentities($alumno['aficiones']) : 
 
 // Si se envía el formulario, procesar la actualización
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Validar los datos
     if (strlen($_POST['nombres']) < 1 || strlen($_POST['apellidos']) < 1) {
         $_SESSION['error'] = 'Datos incompletos';
         header("Location: edit.php?id_alumno=" . $id_alumno);
@@ -63,25 +62,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $anio = $_POST['cur_anio' . $i];
         $curso = $_POST['cur_nombre' . $i];
 
-        // Verificar que el curso tenga un nombre y año
         if (empty($anio) || empty($curso)) continue;
 
-        $id_curso = false;
-
-        // Verificar si el curso ya existe
         $stmt = $pdo->prepare('SELECT id_curso FROM curso WHERE nombre = :nom');
         $stmt->execute(array(':nom' => $curso));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($row !== false) {
+
+        if ($row) {
             $id_curso = $row['id_curso'];
         } else {
-            // Insertar el curso si no existe
             $stmt = $pdo->prepare('INSERT INTO curso(nombre) VALUES (:nom)');
             $stmt->execute(array(':nom' => $curso));
             $id_curso = $pdo->lastInsertId();
         }
 
-        // Insertar el curso del alumno
         $stmt = $pdo->prepare('INSERT INTO alumno_curso(id_alumno, anio, id_curso) VALUES (:ide, :anio, :idc)');
         $stmt->execute(array(
             ':ide' => $id_alumno,
@@ -102,13 +96,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar estudiante</title>
+
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jQuery UI CSS for Autocomplete -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 </head>
 <body>
 <div class="container mt-5">
     <h1 class="mb-4">Editando Estudiante</h1>
     <form method="post">
-        <div class="mb-3">
+    <div class="mb-3">
             <label for="fn" class="form-label">Nombres:</label>
             <input type="text" class="form-control" name="nombres" id="fn" value="<?= $nombres ?>">
         </div>
@@ -124,10 +123,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <label for="afi" class="form-label">Aficiones:</label>
             <textarea name="aficiones" class="form-control" rows="8" id="afi"><?= $aficiones ?></textarea>
         </div>
+
         <div class="mb-3">
             <label>Cursos y/o certificaciones:</label>
             <input type="button" id="addCurso" class="btn btn-primary mb-3" value="+">
         </div>
+
         <div id="curso_fields">
             <?php
             $cuentaCur = 0;
@@ -144,15 +145,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
             ?>
         </div>
+
         <button type="submit" class="btn btn-success">Guardar</button>
         <a href="index.php" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
 
+<!-- jQuery JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- jQuery UI JS for Autocomplete -->
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
 <script>
     let cuentaCur = <?= $cuentaCur ?>;
-    $(document).ready( function() {
+    $(document).ready(function() {
         $('#addCurso').click(function(event) {
             event.preventDefault();
             if (cuentaCur >= 9) {
@@ -171,6 +178,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 source: "cursos.php"
             });
         });
+        
+        // Initialize autocomplete for existing course fields
         $('.cursos').autocomplete({
             source: "cursos.php"
         });
